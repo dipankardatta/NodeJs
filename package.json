@@ -1,0 +1,13 @@
+{
+  "name": "node-js",
+  "version": "1.0.0",
+  "description": "Node.js guide",
+  "main": "first-app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon first-app.js",
+    "start-server":"node first-app.js"
+  },
+  "author": "Dipankar Datta",
+  "license": "ISC"
+}

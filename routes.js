@@ -22,6 +22,7 @@ const requestHandler = (req,res)  => {
           body.push(chunk)
       });
       return req.on('end', ()=>{
+
           const parsedBody = Buffer.concat(body).toString();
           const message = parsedBody.split('=')[1]
           fs.writeFile('message.text', message,(err)=>{
@@ -31,6 +32,7 @@ const requestHandler = (req,res)  => {
               return res.end();
           });
       });
+      
   } else {
       res.setHeader('Content-Type', 'text/html');
       res.write('<html>')
