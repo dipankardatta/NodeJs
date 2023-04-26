@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id='userForm' onsubmit="userDetails(event)">
+        <label>Name</label>
+        <input id="username" type="text" name="username" required />
+        <label>Email</label>
+        <input id="email" type="text" name="email" required />
+        <label>phonenumber</label>
+        <input id="phonenumber" type="number" name="phonenumber" required>
+
+        <button>SUBMIT</button>
+    </form>
+    <ul id="listOfUsers"></ul>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.5/axios.min.js"></script>
+    <script>
+        function userDetails(event) {
+            event.preventDefault();
+            alert('The form has been submitted');
+            const name = event.target.username.value;
+            const email = event.target.email.value;
+            const phone = event.target.phonenumber.value;
+
+            const newUser = { name, email, phone };
+
+            axios
+                .post('http://localhost:3000/user/add-user', newUser)
+                .then((response) => {
+                    const newUserDetail = response.data.newUserDetail;
+                    showNewUserOnScreen(newUserDetail);
+                })
+                .catch((error) => console.log(error));
+
+            event.target.reset();
+        }
+
+
+        const form = document.getElementById('userForm');
+        form.addEventListener('submit', userDetails);
+
+        window.addEventListener('DOMContentLoaded', () => {
+            axios
+                .get('http://localhost:3000/user/get-users')
+                .then((response) => {
+                    const allUsers = response.data.allUsers;
+                    allUsers.forEach((user) => showNewUserOnScreen(user));
+                })
+                .catch((error) => console.log(error));
+        });
+
+        function showNewUserOnScreen(user) {
+            const userList = document.getElementById('listOfUsers');
+
+            const userListItem = document.createElement('li');
+            userListItem.id = user._id;
+            userListItem.textContent = `${user.name} : ${user.email} : ${user.phone}`;
+
+            const deleteButton = document.createElement('button');
+            deleteButton.textContent = 'Delete';
+            deleteButton.className = 'btn btn-danger btn-sm m-1 float-right';
+            deleteButton.addEventListener('click', () => {
+                if (confirm('Are you sure you want to delete this user?')) {
+                    axios
+                        .delete(`http://localhost:3000/user/delete-user/${user._id}`)
+                        .then(() => {
+                            removeUserFromScreen(user._id);
+                        })
+                        .catch((error) => console.log(error));
+                }
+            });
+
+            userListItem.appendChild(deleteButton);
+            userList.appendChild(userListItem);
+        }
+
+        function removeUserFromScreen(userId) {
+            const userListItem = document.getElementById(userId);
+            userListItem.remove();
+        }
+
+    </script>
+</body>
