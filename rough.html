@@ -27,12 +27,12 @@
             alert('The form has been submitted');
             const name = event.target.username.value;
             const email = event.target.email.value;
-            const phone = event.target.phonenumber.value;
+            const phonenumber = event.target.phonenumber.value;
 
-            const newUser = { name, email, phone };
+            const newUser = { name, email, phonenumber };
 
             axios
-                .post('http://localhost:3000/user/add-user', newUser)
+                .post('http://localhost:3000/user/add-users', newUser)
                 .then((response) => {
                     const newUserDetail = response.data.newUserDetail;
                     showNewUserOnScreen(newUserDetail);
@@ -60,8 +60,8 @@
             const userList = document.getElementById('listOfUsers');
 
             const userListItem = document.createElement('li');
-            userListItem.id = user._id;
-            userListItem.textContent = `${user.name} : ${user.email} : ${user.phone}`;
+            userListItem.id = user.id;
+            userListItem.textContent = `${user.name} : ${user.email} : ${user.phonenumber}`;
 
             const deleteButton = document.createElement('button');
             deleteButton.textContent = 'Delete';
